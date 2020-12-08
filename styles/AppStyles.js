@@ -18,5 +18,11 @@ export const styles = StyleSheet.create({
     currentWeather: {
         flex: 1,
         justifyContent: 'center'
+    },
+    retryButton: {
+        backgroundColor: '#0070e0',
+        paddingHorizontal: 50,
+        paddingVertical: 20,
+        borderRadius: 5
     }
 });

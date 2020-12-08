@@ -3,6 +3,8 @@ import {
   SafeAreaView,
   View,
   StatusBar,
+  Text,
+  TouchableOpacity
 } from 'react-native';
 import { styles } from './styles/AppStyles';
 import CurrentWeather from './components/CurrentWeather';
@@ -10,10 +12,10 @@ import Geolocation from '@react-native-community/geolocation';
 import WeatherList from './components/WeatherList';
 import { api } from './API/Handler';
 import { connect } from 'react-redux';
-import { updateWeatherReports, updateIsLoading } from './actions/weatherReports';
+import { updateWeatherReports, updateIsLoading, setIsErrorOccured } from './actions/weatherReports';
 import LottieView from 'lottie-react-native';
 
-const App = ({ updateData, isLoading, setIsLoading }) => {
+const App = ({ updateData, isLoading, setIsLoading, setIsErrorOccured, isError }) => {
 
   const getWeatherUpdates = () => {
     let lat = "", lon = "";
@@ -22,10 +24,16 @@ const App = ({ updateData, isLoading, setIsLoading }) => {
       lat = info.coords.latitude;
       lon = info.coords.longitude;
       let data = await api.get(`onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=10f7b04172ede9554ad5d285d095b56a&units=metric`);
-      data.data.daily.shift();
-      data.data.daily.length = 5;
-      updateData(data.data);
+      if (data.ok) {
+        data.data.daily.shift();
+        data.data.daily.length = 5;
+        updateData(data.data);
+        setIsErrorOccured(false);
+      } else {
+        setIsErrorOccured(true);
+      }
       setIsLoading(false);
+
     });
   }
 
@@ -44,7 +52,7 @@ const App = ({ updateData, isLoading, setIsLoading }) => {
           )
         }
         {
-          !isLoading && (
+          !isLoading && !isError && (
             <React.Fragment>
               <View style={[styles.upperContianer]}>
                 <CurrentWeather />
@@ -55,6 +63,30 @@ const App = ({ updateData, isLoading, setIsLoading }) => {
             </React.Fragment>
           )
         }
+        {
+          !isLoading && isError && (
+            <View style={{
+              flex: 1,
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <LottieView style={{ height: 200, width: 200 }} source={require('./assests/error.json')} autoPlay loop />
+              <Text style={{
+                fontSize: 35,
+                paddingHorizontal: 20,
+                marginBottom: 40
+              }}>Oops something went wrong.</Text>
+              <TouchableOpacity style={[styles.retryButton]}
+                onPress={getWeatherUpdates}
+              >
+                <Text style={{
+                  color: '#ffffff'
+                }}>Retry</Text>
+              </TouchableOpacity>
+            </View>
+          )
+        }
       </SafeAreaView>
     </React.Fragment>
   );
@@ -62,12 +94,14 @@ const App = ({ updateData, isLoading, setIsLoading }) => {
 
 const mapStateToProps = (state) => ({
   data: state.weatherReports,
-  isLoading: state.weatherReports.isLoading
+  isLoading: state.weatherReports.isLoading,
+  isError: state.weatherReports.isErrorOccured
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateData: (data) => dispatch(updateWeatherReports(data)),
-  setIsLoading: (isLoading) => dispatch(updateIsLoading(isLoading))
+  setIsLoading: (isLoading) => dispatch(updateIsLoading(isLoading)),
+  setIsErrorOccured: (isErrorOccured) => dispatch(setIsErrorOccured(isErrorOccured))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -3,7 +3,8 @@ const defaultState = {
         weather: []
      },
     daily: [  ],
-    isLoading: true
+    isLoading: true,
+    isErrorOccured: false,
 }
 
 export default (state = defaultState, action) => {
@@ -17,6 +18,11 @@ export default (state = defaultState, action) => {
             return {
                 ...state,
                 isLoading: action.isLoading
+            };
+        case 'ERROR_OCCURED':
+            return {
+                ...state,
+                isErrorOccured: action.isErrorOccured
             };
         default:
             return state;

@@ -11,3 +11,10 @@ export const updateIsLoading = (isLoading) => {
         isLoading: isLoading
     };
 }
+
+export const setIsErrorOccured = (isErrorOccured) => {
+    return {
+        type: 'ERROR_OCCURED',
+        isErrorOccured
+    }
+}
