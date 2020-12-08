@@ -50,7 +50,7 @@ const WeatherList = ( {data} ) => {
                                 
                             }}
                         />
-                        <Text style={{fontSize: 12}}>{item.temp.min} °F</Text>
+                        <Text style={{fontSize: 12}}>{item.temp.min} °C</Text>
                         </View>
 						</View>
 					);

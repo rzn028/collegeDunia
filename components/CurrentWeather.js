@@ -31,7 +31,7 @@ const CurrentWeather = ( { data } ) => {
         <Text style={{
           fontSize: 22,
           alignSelf: 'center',
-        }}>{data?.current?.temp} °F</Text>
+        }}>{data?.current?.temp} °C</Text>
 
       </View>
   );
