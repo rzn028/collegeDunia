@@ -5,28 +5,9 @@ import {
   Text
 } from 'react-native';
 import { styles } from '../styles/AppStyles';
-import { api } from '../API/Handler';
-import Config from 'react-native-config';
-import Geolocation from '@react-native-community/geolocation';
+import { connect } from 'react-redux';
 
-const CurrentWeather = () => {
-
-  const [ data, setData ] = useState({});
-
-  const getWeatherUpdates = () => {
-    let lat = "", lon = "";
-    Geolocation.getCurrentPosition(async (info) => {
-      lat = info.coords.latitude;
-      lon = info.coords.longitude;
-      const data = await api.get(`onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=10f7b04172ede9554ad5d285d095b56a`)
-      setData(data.data);
-    });
-  }
-
-  useEffect(() => {
-    getWeatherUpdates();
-  }, []);
-
+const CurrentWeather = ( { data } ) => {
   return (
       <View style={[styles.currentWeather]}>
       <View style={{
@@ -56,4 +37,9 @@ const CurrentWeather = () => {
   );
 };
 
-export default CurrentWeather;
+const mapStateToProps = (state) => ({
+  data: state.weatherReports
+});
+
+
+export default connect(mapStateToProps)(CurrentWeather);

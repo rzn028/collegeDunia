@@ -1,38 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
 import { styles } from '../styles/AppStyles';
-import { api } from '../API/Handler';
-import Config from 'react-native-config';
-import Geolocation from '@react-native-community/geolocation';
+import { connect } from 'react-redux';
 import { days } from '../constants/weatherMap';
 
 
-const WeatherList = () => {
-	const [ data, setData ] = useState({});
-
-	const getWeatherUpdates = () => {
-		let lat = '',
-			lon = '';
-		Geolocation.getCurrentPosition(async (info) => {
-			lat = info.coords.latitude;
-			lon = info.coords.longitude;
-			let data = await api.get(
-				`onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=10f7b04172ede9554ad5d285d095b56a`
-            );
-            data.data.daily.shift();
-            data.data.daily.length = 5;
-            console.log(data.data.daily.length);
-			setData(data.data);
-		});
-	};
-
-	useEffect(() => {
-		getWeatherUpdates();
-	}, []);
+const WeatherList = ( {data} ) => {
 
 	return (
 		<View style={[ styles.lowerContainer ]}>
-			{data.daily &&
+			{data?.daily &&
 				data.daily.map((item) => {
 					return (
 						<View
@@ -51,7 +28,7 @@ const WeatherList = () => {
 								flexDirection: 'row',
                                 alignContent: 'center',
                                 paddingHorizontal: 20,
-                                justifyContent: 'space-between'
+								justifyContent: 'space-between'
 							}}
                         >
                         <View style={{
@@ -82,4 +59,9 @@ const WeatherList = () => {
 	);
 };
 
-export default WeatherList;
+const mapStateToProps = (state) => ({
+	data: state.weatherReports
+  });
+  
+
+export default connect(mapStateToProps)(WeatherList);
