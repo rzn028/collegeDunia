@@ -12,9 +12,11 @@ export const styles = StyleSheet.create({
         flex: 1
     },
     lowerContainer: {
-        flex: 1
+        flex: 1,
+        paddingBottom: 10
     },
     currentWeather: {
         flex: 1,
+        justifyContent: 'center'
     }
 });

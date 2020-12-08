@@ -1,11 +1,10 @@
 import { createStore, combineReducers, compose } from 'redux';
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+import weatherReports from '../reducers/weatherReports';
 
 export default () => {
   const store = createStore(
     combineReducers({
-        weatherReports: weatherReportsReducer
+        weatherReports: weatherReports
     }),
   );
 

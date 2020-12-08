@@ -7,6 +7,7 @@ import {
 import { styles } from './styles/AppStyles';
 import CurrentWeather from './components/CurrentWeather';
 import Geolocation from '@react-native-community/geolocation';
+import WeatherList from './components/WeatherList';
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
           <CurrentWeather/>
         </View>
         <View style={[styles.lowerContainer]}>
+          <WeatherList/>
         </View>
       </SafeAreaView>
     </React.Fragment>
